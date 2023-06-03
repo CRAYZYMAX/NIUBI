@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>连连看小游戏</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      background-color: #f5f5f5;
+    }
+    .game-board {
+      display: inline-block;
+      margin-top: 50px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    .game-board td {
+      width: 50px;
+      height: 50px;
+      border: 1px solid #ddd;
+      padding: 0;
+      text-align: center;
+      font-size: 28px;
+      cursor: pointer;
+    }
+    .game-board td.selected {
+      background-color: #ffd700;
+    }
+  </style>
+</head>
+<body>
+  <table class="game-board"></table>
+  <script src="game.js"></script>
+</body>
+</html>
+JavaScript 代码：
+
+javascript
+// 游戏设置
+var GAME_WIDTH = 8; // 游戏面板宽度（格子数）
+var GAME_HEIGHT = 6; // 游戏面板高度（格子数）
+var CARD_TYPES = ['🐶', '🐱', '🐭', '🐹', '🐰', '🐻', '🐼', '🐨']; // 图案种类
+var CARD_PAIRS = 8; // 图案对数
+
+// 游戏变量
+var cards = []; // 存储所有卡片的数组
+var selectedCards = []; // 存储已选择的卡片
+var matchedCards = []; // 存储已匹配的卡片
+
+// 生成卡片数组
+function generateCards() {
+  var cardPool = CARD_TYPES.slice(0, CARD_PAIRS); // 从图案种类中选取 CARD_PAIRS 种，每种选取两个，组成牌池
+  var cardPairs = cardPool.concat(cardPool); // 将牌池复制一份，组成卡片对
+  var shuffledCards = shuffle(cardPairs); // 将卡片对数组随机排序
+  for (var i = 0; i < GAME_WIDTH * GAME_HEIGHT; i++) {
+    cards.push({
+      type: shuffledCards[i], // 卡片图案
+      matched: false // 是否已匹配
+    });
+  }
+}
+
+// 将数组随机排序
+function shuffle(array) {
+  var currentIndex = array.length;
+  var temporaryValue, randomIndex;
+  while (0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+}
+
+// 渲染游戏面板
+function renderGameBoard() {
+  var gameBoard = document.querySelector('.game-board');
+  for (var i = 0; i < GAME_HEIGHT; i++) {
+    var row = document.createElement('tr');
+    for (var j = 0; j < GAME_WIDTH; j++) {
+      var card = cards[i * GAME_WIDTH + j];
+      var cell = document.createElement('td');
+      cell.innerHTML = card.type;
+      cell.dataset.row = i;
+      cell.dataset.col = j;
+      row.appendChild(cell);
+    }
+    gameBoard.appendChild(row);
+  }
+}
+
+// 处理卡片点击事件
+function handleCardClick(event) {
+  var card = event.target;
+  if (card.tagName !== 'TD' || card.classList.contains('matched')) {
+    return;
+  }
+  var row = parseInt(card.dataset.row);
+  var col = parseInt(card.dataset.col);
+  var clickedCard = cards[row * GAME_WIDTH + col];
+  if (selectedCards.length === 0) { // 如果之前没有选择的卡片
+    selectedCards.push(clickedCard); // 将当前卡片加入已选择的卡片数组
+    card.classList.add('selected'); // 标记为已选择状态
+  } else if (selectedCards.length === 1) { // 如果已选择了一张卡片
+    var prevCard = selectedCards[0];
+    if (prevCard === clickedCard) { // 如果选择了同一张卡片
+      return;
+    }
+    if (prevCard.type === clickedCard.type) { // 如果两张卡片图案相同
+      prevCard.matched = true; // 标记为已匹配状态
+      clickedCard.matched = true;
+      matchedCards.push(prevCard, clickedCard); // 将已匹配的卡片加入已匹配的卡片数组
+      if (matchedCards.length === GAME_WIDTH * GAME_HEIGHT) { // 如果全部卡片都已匹配
+        alert('游戏结束！恭喜你获胜！');
+      }
+    }
+    card.classList.add('selected'); // 标记为已选择状态
+    selectedCards = []; // 清空已选择的卡片数组
+  } else { // 如果已选择了两张卡片
+    selectedCards.forEach(function (card) {
+      card.matched = false; // 取消之前已选择的卡片的匹配状态
+      var cells = document.querySelectorAll('.game-board td');
+      Array.prototype.forEach.call(cells, function (cell) {
+        cell.classList.remove('selected'); // 取消所有卡片的选择状态
+      });
+    });
+    selectedCards = [clickedCard]; // 将当前卡片加入已选择的卡片数组
+    card.classList.add('selected'); // 标记为已选择状态
+  }
+}
+
+// 清空游戏面板
+function clearGameBoard() {
+  var gameBoard = document.querySelector('.game-board');
+  gameBoard.innerHTML = '';
+}
+
+// 重新开始游戏
+function restartGame() {
+  clearGameBoard();
+  cards = [];
+  selectedCards = [];
+  matchedCards = [];
+  generateCards();
+  renderGameBoard();
+}
+
+// 为卡片添加点击事件监听器
+var gameBoard = document.querySelector('.game-board');
+gameBoard.addEventListener('click', handleCardClick);
+
+// 生成卡片数组并渲染游戏面板
+generateCards();
+renderGameBoard();
