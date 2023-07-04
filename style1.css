@@ -1,0 +1,145 @@
+/* 重置默认样式 */
+body,
+ul,
+li,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+/* 设置页面字体和背景颜色 */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+/* 设置整体布局 */
+#wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#main {
+  flex: 2;
+  padding: 2rem;
+}
+
+#sidebar {
+  flex: 1;
+  padding: 2rem;
+  background-color: #eee;
+}
+
+/* 设置页眉 */
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #333;
+  color: #fff;
+}
+
+#header .logo {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* 设置横幅 */
+#banner {
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  background-color: #fff;
+}
+
+#banner .content {
+  flex: 2;
+}
+
+#banner .image {
+  flex: 1;
+}
+
+/* 设置特性部分 */
+.features {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.features article {
+  flex: 1;
+  padding: 1rem;
+}
+
+.features .content {
+  margin-top: 1rem;
+}
+
+/* 设置商品部分 */
+.posts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* 设置商品部分续 */
+.posts article {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  background-color: #fff;
+}
+
+.posts article img {
+  width: 100%;
+  height: auto;
+}
+
+.posts article h3 {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+
+.posts article p {
+  margin-top: 0.5rem;
+  color: #666;
+}
+
+/* 设置页脚 */
+#footer {
+  background-color: #333;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+#footer a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* 设置响应式布局 */
+@media screen and (max-width: 768px) {
+  #wrapper {
+    flex-direction: column;
+  }
+
+  #sidebar {
+    order: -1;
+  }
+
+  .features article {
+    flex: 100%;
+  }
+
+  .posts {
+    grid-template-columns: 1fr;
+  }
+}
