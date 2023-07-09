@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>打击盒子游戏</title>
+  <style>
+    #game-area {
+      position: relative;
+      width: 400px;
+      height: 600px;
+      border: 1px solid black;
+      margin: 20px auto;
+    }
+
+    .box {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-color: red;
+    }
+
+    #start-button {
+      display: block;
+      margin: 20px auto;
+    }
+
+    #result-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-area">
+    <div id="score">Score: 10</div>
+    <div id="result-text"></div>
+  </div>
+  <button id="start-button" onclick="startGame()">开始游戏</button>
+
+  <script>
+    var score = 10;
+    var gameArea = document.getElementById('game-area');
+    var scoreElement = document.getElementById('score');
+    var resultText = document.getElementById('result-text');
+    var boxInterval;
+
+    function createBox() {
+  var box = document.createElement('div');
+  box.className = 'box';
+  var randomPosition = Math.floor(Math.random() * (gameArea.offsetWidth - 50));
+  box.style.left = randomPosition + 'px';
+  gameArea.appendChild(box);
+
+  var topPosition = 0;
+  box.boxInterval = setInterval(function() {
+    topPosition += 2;
+    box.style.top = topPosition + 'px';
+
+    if (topPosition >= gameArea.offsetHeight) {
+      clearInterval(box.boxInterval);
+      box.remove();
+      score -= 2;
+      scoreElement.textContent = 'Score: ' + score;
+      if (score <= 0) {
+        endGame(false);
+      }
+    }
+  }, 10);
+}
+var createBoxInterval;
+
+function startGame() {
+  var startButton = document.getElementById('start-button');
+  startButton.disabled = true; // Disable the button once the game starts
+  resultText.textContent = ''; // Clear any previous result text
+  resultText.style.visibility = 'hidden'; // Hide the result text
+  createBoxInterval = setInterval(createBox, 3000);
+}
+
+function endGame(isVictory) {
+  clearInterval(createBoxInterval);
+  // ... rest of the function
+}
+
+gameArea.addEventListener('click', function(event) {
+  var clickedElement = event.target;
+  if (clickedElement.className === 'box') {
+    clearInterval(clickedElement.boxInterval);
+    clickedElement.remove();
+    score += 1;
+    scoreElement.textContent = 'Score: ' + score;
+    if (score >= 60) {
+      endGame(true);
+    }
+  }
+});
+    function endGame(isVictory) {
+      if (isVictory) {
+        resultText.textContent = '恭喜，你赢得了游戏！';
+      } else {
+        resultText.textContent = '很遗憾，你输掉了游戏！';
+      }
+      resultText.style.visibility = 'visible'; // Show the result text
+      var startButton = document.getElementById('start-button');
+      startButton.disabled = false; // Enable the start button to play again
+    }
+  </script>
+</body>
+</html>
