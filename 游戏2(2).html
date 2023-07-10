@@ -106,7 +106,7 @@
 
         var topPosition = 0;
         box.boxInterval = setInterval(function() {
-          topPosition += 2;
+          topPosition += 3;
           box.style.top = topPosition + 'px';
 
           if (topPosition >= gameArea.offsetHeight) {
@@ -128,7 +128,7 @@
     startButton.disabled = true; // Disable the button once the game starts
     resultText.textContent = ''; // Clear any previous result text
     resultText.style.visibility = 'hidden'; // Hide the result text
-    createBoxInterval = setInterval(createBox, 3000);
+    createBoxInterval = setInterval(createBox, 1000);
     var startMenu = document.querySelector('.startMenu')
     gameArea.removeChild(startMenu)
   }
